@@ -13,7 +13,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+# restore packages
 - script: dotnet restore
+  displayName: 'restoring packages'
+
+# run build
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
@@ -25,18 +29,11 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-# publish tests
-- script: dotnet test [*sln] --logger trx
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: '**/*.trx'
-
 # pack for web deploy
 # do this after you've built your app, near the end of your pipeline in most cases
 # for example, you do this before you deploy to an Azure web app on Windows
 - task: DotNetCoreCLI@2
+  displayName: "pack for webdeploy - publish"
   inputs:
     command: publish
     publishWebProjects: True
@@ -45,6 +42,7 @@ steps:
 
 # copy files to artifact staging directory
 - script: dotnet publish --output $(Build.ArtifactStagingDirectory)
+  displayName: "copy to artifact staging directory"
 
 # publish artifacts
 - task: PublishBuildArtifacts@1
