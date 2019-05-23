@@ -41,8 +41,8 @@ steps:
     zipAfterPublish: True
 
 # copy files to artifact staging directory
-- script: dotnet publish --output $(Build.ArtifactStagingDirectory)
-  displayName: "copy to artifact staging directory"
+#- script: dotnet publish --output $(Build.ArtifactStagingDirectory)
+#  displayName: "copy to artifact staging directory"
 
 # publish artifacts
 - task: PublishBuildArtifacts@1
